@@ -10,7 +10,7 @@ $config = [
     "api_2" => [...API_2_CREDS...],
     "..."
 ]
-$gator = new \EventGator\EventGatorClient();
+$gator = new \EventGator\EventGatorClient($config);
 $events = $gator->getEvents();
 ```
 

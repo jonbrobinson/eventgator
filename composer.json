@@ -1,26 +1,21 @@
 {
   "name": "jonbrobinson/eventgator",
-  "description": "Event aggreation tool for Facebook and EventBrite",
+  "description": "Event Gator is a PHP Api Event Aggregator client that makes it easy to construct a standard event set from your third party event services.",
   "keywords": ["events", "facebook", "eventbrite"],
   "license": "MIT",
   "type": "project",
   "require": {
     "php": ">=5.5.9",
-    "guzzlehttp/guzzle": "~6.0"
+    "guzzlehttp/guzzle": "~6.0",
+    "facebook/graph-sdk" : "~5.0"
   },
   "require-dev": {
   },
   "autoload": {
     "classmap": [
-      "database"
     ],
     "psr-4": {
       "": "src/"
     }
-  },
-  "autoload-dev": {
-    "classmap": [
-      "tests/TestCase.php"
-    ]
   }
 }
