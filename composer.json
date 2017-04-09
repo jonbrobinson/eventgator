@@ -1,0 +1,26 @@
+{
+  "name": "jonbrobinson/eventgator",
+  "description": "Event aggreation tool for Facebook and EventBrite",
+  "keywords": ["events", "facebook", "eventbrite"],
+  "license": "MIT",
+  "type": "project",
+  "require": {
+    "php": ">=5.5.9",
+    "guzzlehttp/guzzle": "~6.0",
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "classmap": [
+      "database"
+    ],
+    "psr-4": {
+      "": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/TestCase.php"
+    ]
+  }
+}
