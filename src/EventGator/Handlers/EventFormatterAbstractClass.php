@@ -1,11 +1,13 @@
 <?php
 
-namespace EventGator;
+namespace EventGator\Handlers;
 
-abstract class EventFormatterAbstractCLass
+abstract class EventFormatterAbstractClass
 {
     abstract public function getEvents();
-    abstract public function processSingleEvent();
+    abstract protected function getPlatformEvents();
+    abstract protected function getPlatformRelations();
+    abstract protected function processSingleEvent($event);
 
     /**
      * @return array
