@@ -9,7 +9,7 @@ use GuzzleHttp\Client as Guzzle;
 class FbApiHelper extends EventFormatterAbstractClass
 {
     const FB_BASE_URL = 'https://graph.facebook.com';
-    const MIN_GRAPH_VERSION = 'v2.6';
+    const DEFAULT_GRAPH_VERSION = 'v2.6';
 
     protected $fb;
     protected $guzzleHttp;
@@ -234,7 +234,7 @@ class FbApiHelper extends EventFormatterAbstractClass
      */
     protected function getBaseUrl()
     {
-        $version = self::MIN_GRAPH_VERSION;
+        $version = self::DEFAULT_GRAPH_VERSION;
 
         if ($this->fb['default_graph_version']) {
             $version = $this->fb['default_graph_version'];
