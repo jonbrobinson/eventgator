@@ -1,5 +1,5 @@
 .idea/*
-src/EventGator/TestFiles/*
+src/TestFiles/*
 runGator.php
 vendor/*
 composer.lock
