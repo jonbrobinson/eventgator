@@ -19,4 +19,9 @@ Class EventGatorClient
 
         return $events;
     }
+
+    public function setFbNode($id)
+    {
+        $this->fbApiHelper->setNodeEntityId($id);
+    }
 }

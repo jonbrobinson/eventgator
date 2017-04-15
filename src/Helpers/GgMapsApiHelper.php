@@ -3,16 +3,20 @@
 namespace App\Aaulyp\Tools\Api;
 
 use GuzzleHttp\Client as Guzzle;
-use GuzzleHttp\Psr7\Request;
 
 class GgMapsApiHelper
 {
     const GOOGLE_MAPS_BASE_URL = "https://maps.googleapis.com/maps/api";
 
     protected $guzzle;
+    protected $config;
 
-    public function __construct()
+    public function __construct($config)
     {
+        $this->config  = array(
+            "api_key" => $config["google"]['api_key']
+        );
+
         $this->guzzle = new Guzzle([
             'base_uri' => self::GOOGLE_MAPS_BASE_URL,
         ]);

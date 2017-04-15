@@ -3,25 +3,27 @@
 
 namespace EventGator\Helpers;
 
-use EventGator\Handlers\EventFormatterAbstractClass;;
-use Facebook\Facebook;
-use Facebook\FacebookRequest;
+use EventGator\Handlers\EventFormatterAbstractClass;
+use GuzzleHttp\Client as Guzzle;
 
 class FbApiHelper extends EventFormatterAbstractClass
 {
-    const AAULYP_FB_PAGE_ID = 135986973127166;
+    const FB_BASE_URL = 'https://graph.facebook.com';
+    const MIN_GRAPH_VERSION = 'v2.6';
 
     protected $fb;
-    protected $fbApp;
+    protected $guzzleHttp;
+    protected $nodeEntity;
 
     public function __construct($config)
     {
-        $this->fb= new Facebook([
-                "app_id" => $config['facebook']['app_id'],
-                "app_secret" => $config['facebook']['app_secret'],
-                "default_graph_version" => $config['facebook']['default_graph_version']
-            ]
+        $this->fb= array(
+            "app_id" => $config['facebook']['app_id'],
+            "app_secret" => $config['facebook']['app_secret'],
+            "default_graph_version" => $config['facebook']['default_graph_version']
         );
+
+        $this->guzzleHttp = $this->getGuzzleHttp();
     }
 
     /**
@@ -33,14 +35,20 @@ class FbApiHelper extends EventFormatterAbstractClass
     {
         $events = $this->getPlatformEvents();
 
-        return $events;
-
         $transformedEvents = array();
         foreach($events as $event) {
             $transformedEvents[] = $this->processSingleEvent($event);
         }
 
         return $transformedEvents;
+    }
+
+    /**
+     * @param $id
+     */
+    public function setNodeEntityId($id)
+    {
+        $this->nodeEntity = $id;
     }
 
     /**
@@ -169,36 +177,81 @@ class FbApiHelper extends EventFormatterAbstractClass
 
     protected function getPlatformEvents()
     {
+        $endpoint = "/".$this->nodeEntity;
+        $options = array(
+            "query" => array(
+                "fields" => "events{id,name,category,description,place,cover,attending_count,interested_count,start_time,end_time,ticket_uri}",
+                "access_token" => $this->getAccessToken()
+            )
+        );
 
-        $uri = self::AAULYP_FB_PAGE_ID.'?fields=events{id,name,category,description,place,cover,attending_count,interested_count,start_time,end_time,ticket_uri}';
-        $endpoint = "/".$uri;
+        $contents = $this->sendFbGraphRequest("GET", $endpoint, $options);
 
-        $events = $this->sendFbGraphRequest("GET", $endpoint);
+        $decoded = json_decode($contents, true);
+        $events = $decoded["events"]["data"];
 
         return $events;
+    }
+
+    protected function getAccessToken()
+    {
+        $endpoint = "/oauth/access_token";
+        $options = array(
+            "query" => array(
+                "client_id" => $this->fb['app_id'],
+                "client_secret" => $this->fb['app_secret'],
+                "grant_type" => "client_credentials"
+            )
+        );
+
+        $content = $this->sendFbGraphRequest("GET", $endpoint, $options);
+        $decoded = json_decode($content, true);
+        $token = $decoded["access_token"];
+
+        return $token;
     }
 
     /**
      * @param string $method
      * @param string $endpoint
-     * @param array  $params
+     * @param array  $options
      *
      * @return array
      */
-    protected function sendFbGraphRequest($method, $endpoint, $params = array())
+    protected function sendFbGraphRequest($method, $endpoint, $options = array())
     {
-        $request = new FacebookRequest(
-            $this->fb->getApp(),
-            $this->fb->getApp()->getAccessToken()->getValue(),
-            $method,
-            $endpoint,
-            $params
-        );
+        $url = $this->getBaseUrl().$endpoint;
 
-        $response = $this->fb->getClient()->sendRequest($request);
+        $response = $this->guzzleHttp->request($method, $url, $options);
 
-        $content = $response->getDecodedBody();
+        $content = $response->getBody()->getContents();
 
         return $content;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getBaseUrl()
+    {
+        $version = self::MIN_GRAPH_VERSION;
+
+        if ($this->fb['default_graph_version']) {
+            $version = $this->fb['default_graph_version'];
+        }
+
+        $baseUrl = self::FB_BASE_URL."/".$version;
+
+        return $baseUrl;
+    }
+
+    /**
+     * @return Guzzle
+     */
+    protected function getGuzzleHttp()
+    {
+        $guzzle = new Guzzle();
+
+        return $guzzle;
     }
 }
