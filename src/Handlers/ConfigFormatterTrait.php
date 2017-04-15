@@ -13,7 +13,7 @@ trait ConfigFormatterTrait
      */
     public function validateConfig($config)
     {
-        foreach(array_keys($config) as $platform){
+        foreach($config as $platform => $details){
             if (!in_array($platform, $this->validPlatforms)) {
                 throw new \Exception("Error: Please enter a valid Platform. Platform Entered: ".$platform);
             }
