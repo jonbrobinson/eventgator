@@ -19,7 +19,10 @@ Class EventGatorClient
     {
         $fbEvents = $this->fbApiHelper->getEvents();
         $ebEvents = $this->ebApiHelper->getEvents();
-        $events = array_merge($fbEvents, $ebEvents);
+        $allEvents = array_merge($fbEvents, $ebEvents);
+
+        $sorted = $this->buildSortEventsByTime($allEvents);
+        $events = $this->sanitizeSortedEvents($sorted);
 
         return $events;
     }
@@ -32,5 +35,53 @@ Class EventGatorClient
     public function setEbNode($id)
     {
         $this->ebApiHelper->setOrdId($id);
+    }
+
+    /**
+     * @param array $events
+     *
+     * @return array
+     */
+    protected function buildSortEventsByTime($events)
+    {
+        $sorted = array();
+
+        foreach ($events as $event) {
+            $time_start = $event['time_start'];
+            $sorted[$time_start] = array($event['platform'] => $event);
+        }
+
+        krsort($sorted);
+
+        return $sorted;
+    }
+
+    /**
+     * @param array  $events
+     *
+     * @return array
+     */
+    protected function sanitizeSortedEvents($events)
+    {
+        $validEvents = array();
+
+        foreach ($events as $time => $platforms) {
+            if (count($platforms) > 1) {
+                $validEvents[] = $events[$time]['eventbrite'];
+                continue;
+            }
+
+            if (array_key_exists('facebook', $events[$time])) {
+                $validEvents[] = $events[$time]['facebook'];
+                continue;
+            }
+
+            if (array_key_exists('eventbrite', $events[$time])) {
+                $validEvents[] = $events[$time]['eventbrite'];
+                continue;
+            }
+        }
+
+        return $validEvents;
     }
 }
