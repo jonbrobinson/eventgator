@@ -22,6 +22,8 @@ class EbApiHelper extends EventFormatterAbstractClass
             "app_version" => $config["eventbrite"]['app_version']
         );
 
+        $this->orgId = $config['eventbrite']['organizer_id'];
+
         $this->guzzleHttp = $this->getGuzzleHttp();
     }
 

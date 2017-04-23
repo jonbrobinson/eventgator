@@ -36,7 +36,7 @@ class GgMapsApiHelper
         $query = [
             'latlng' => $latitude . ',' . $longitude,
             'result_type' => 'street_address',
-            'key' => env('GOOGLE_API_KEY'),
+            'key' => $this->config['api_key'],
         ];
 
         $options = [

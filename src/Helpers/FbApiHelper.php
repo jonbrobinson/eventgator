@@ -23,6 +23,8 @@ class FbApiHelper extends EventFormatterAbstractClass
             "default_graph_version" => $config['facebook']['default_graph_version']
         );
 
+        $this->nodeEntity = $config['facebook']['graph_node_id'];
+
         $this->guzzleHttp = $this->getGuzzleHttp();
     }
 
