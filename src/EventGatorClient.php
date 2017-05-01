@@ -2,17 +2,22 @@
 
 namespace EventGator;
 
+use EventGator\Handlers\ConfigFormatterTrait;
 use EventGator\Helpers\EbApiHelper;
 use EventGator\Helpers\FbApiHelper;
 
 Class EventGatorClient
 {
+    use ConfigFormatterTrait;
+
     protected $fbApiHelper;
+    protected $config;
 
     public function __construct($config)
     {
-        $this->fbApiHelper = new FbApiHelper($config);
-        $this->ebApiHelper = new EbApiHelper($config);
+        $this->config = $this->validateConfig($config);
+        $this->fbApiHelper = new FbApiHelper($this->config['facebook']);
+        $this->ebApiHelper = new EbApiHelper($this->config['eventbrite']);
     }
 
     public function getEvents()

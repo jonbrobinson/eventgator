@@ -18,9 +18,11 @@ class EbApiHelper extends EventFormatterAbstractClass
     public function __construct($config)
     {
         $this->eb= array(
-            "app_key" => $config["eventbrite"]['app_key'],
-            "app_version" => $config["eventbrite"]['app_version']
+            "app_key" => $config["app_key"],
+            "app_version" => $config["app_version"]
         );
+
+        $this->orgId = $config["organizer_id"];
 
         $this->guzzleHttp = $this->getGuzzleHttp();
     }

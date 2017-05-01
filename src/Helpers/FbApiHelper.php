@@ -18,10 +18,12 @@ class FbApiHelper extends EventFormatterAbstractClass
     public function __construct($config)
     {
         $this->fb= array(
-            "app_id" => $config['facebook']['app_id'],
-            "app_secret" => $config['facebook']['app_secret'],
-            "default_graph_version" => $config['facebook']['default_graph_version']
+            "app_id" => $config['app_id'],
+            "app_secret" => $config['app_secret'],
+            "default_graph_version" => $config['default_graph_version']
         );
+
+        $this->nodeEntity = $config['graph_node_id'];
 
         $this->guzzleHttp = $this->getGuzzleHttp();
     }
@@ -236,7 +238,7 @@ class FbApiHelper extends EventFormatterAbstractClass
     {
         $version = self::DEFAULT_GRAPH_VERSION;
 
-        if ($this->fb['default_graph_version']) {
+        if (isset($this->fb['default_graph_version']) && $this->fb['default_graph_version']) {
             $version = $this->fb['default_graph_version'];
         }
 
