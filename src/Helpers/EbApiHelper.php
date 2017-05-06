@@ -2,10 +2,10 @@
 
 namespace EventGator\Helpers;
 
-use EventGator\Handlers\EventFormatterAbstractClass;
+use EventGator\Handlers\EventBuilderAbstractClass;
 use GuzzleHttp\Client as Guzzle;
 
-class EbApiHelper extends EventFormatterAbstractClass
+class EbApiHelper extends EventBuilderAbstractClass
 {
     const EB_BASE_URL = 'https://www.eventbriteapi.com';
     const DEFAULT_VERSION = 'v3';

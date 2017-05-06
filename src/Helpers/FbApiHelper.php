@@ -3,10 +3,10 @@
 
 namespace EventGator\Helpers;
 
-use EventGator\Handlers\EventFormatterAbstractClass;
+use EventGator\Handlers\EventBuilderAbstractClass;
 use GuzzleHttp\Client as Guzzle;
 
-class FbApiHelper extends EventFormatterAbstractClass
+class FbApiHelper extends EventBuilderAbstractClass
 {
     const FB_BASE_URL = 'https://graph.facebook.com';
     const DEFAULT_GRAPH_VERSION = 'v2.6';

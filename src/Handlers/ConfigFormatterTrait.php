@@ -4,7 +4,7 @@ namespace EventGator\Handlers;
 
 trait ConfigFormatterTrait
 {
-    protected $validPlatforms = array('facebook', 'eventbrite');
+    protected $validPlatforms = ['facebook', 'eventbrite'];
     protected $validFbKeys = ['app_id', 'app_secret', 'default_graph_version', 'graph_node_id'];
     protected $validEbKeys = ['app_key', 'app_version', 'organizer_id'];
 
@@ -14,7 +14,7 @@ trait ConfigFormatterTrait
      * @return array
      * @throws \Exception
      */
-    public function validateConfig($config)
+    protected function validateConfig($config)
     {
         foreach($config as $platform => $details){
             if (!in_array($platform, $this->validPlatforms)) {
@@ -25,6 +25,20 @@ trait ConfigFormatterTrait
         }
 
         return $config;
+    }
+
+    /**
+     * @param array $config
+     *
+     * @return mixed
+     */
+    protected function getPreferredPlatform($config)
+    {
+        foreach (array_keys($config) as $platform) {
+            return $platform;
+        }
+
+        return false;
     }
 
     /**
@@ -58,6 +72,6 @@ trait ConfigFormatterTrait
                 return $this->validEbKeys;
         }
 
-        throw new \Exception("Missing Valid PLatform. Platform Entered: ".$platform);
+        throw new \Exception("Missing Valid Platform. Platform Entered: ".$platform);
     }
 }
